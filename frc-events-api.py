@@ -3,33 +3,33 @@ import json
 import sys
 
 def collect_all_pages(sesh, url, opt_args='?'):
-	first = sesh.get(url + opt_args).json()
-	all = [first]
-	for i in range(2, first['pageTotal']+1):
-		current = sesh.get(url + opt_args + '&page=' + str(i)).json()
-		all.append(current)
-	return all
+    first = sesh.get(url + opt_args).json()
+    all = [first]
+    for i in range(2, first['pageTotal']+1):
+        current = sesh.get(url + opt_args + '&page=' + str(i)).json()
+        all.append(current)
+    return all
 
 def collect_and_merge(sesh, url, opt_args='?'):
-	all_pages = collect_and_merge(sesh, url, opt_args)
-	result = {}
+    all_pages = collect_and_merge(sesh, url, opt_args)
+    result = {}
 
-	for page in all_pages:
-		for k in page.keys():
-			if 'total' in k.lower():
-				result[k] = page[k]
-			elif 'page' in k.lower():
-				continue
-			else:
-				if k not in result:
-					result[k] = []
-				result[k].extend(page[k])
-	
-	return result
+    for page in all_pages:
+        for k in page.keys():
+            if 'total' in k.lower():
+                result[k] = page[k]
+            elif 'page' in k.lower():
+                continue
+            else:
+                if k not in result:
+                    result[k] = []
+                result[k].extend(page[k])
+    
+    return result
 
 def gather_data(user, password):
-	sesh = requests.Session()
-	sesh.auth = (user, password)
+    sesh = requests.Session()
+    sesh.auth = (user, password)
 
     data = {}
 
